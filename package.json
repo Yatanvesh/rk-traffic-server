@@ -15,7 +15,9 @@
     "google-map-react": "^1.1.5",
     "nodemon": "^1.19.4",
     "pip": "0.0.1",
+    "reqest": "^0.0.1-security",
     "socket-io": "^1.0.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "unirest": "^0.6.0"
   }
 }

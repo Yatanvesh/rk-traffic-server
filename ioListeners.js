@@ -1,14 +1,24 @@
-
-const {CHANNELS,SIMULATION_STATES, INITIAL_STATE, MODEL_REQUESTS} = require('./constants');
-
+const {CHANNELS,SIMULATION_STATES, INITIAL_STATE} = require('./constants');
+const {getDistance} = require('./API');
 const state = INITIAL_STATE;
 
 let currentSocket = null;
 
 const clientLocationBroadcaster = (socket) => { 
-    socket.on(CHANNELS.CLIENT_LOCATION, (message) => {
-        console.log("Received client LOCATION", message);
-        handleClientData(message);
+    socket.on(CHANNELS.CLIENT_LOCATION, (data) => {
+        console.log("Received client LOCATION", data);
+        let prevLocation = state.clients[data.id] && state.clients[data.id].coords;
+        handleClientData(data);
+        let newLocation = data.coords;
+        if(prevLocation){
+            console.log("Distance", getDistance( 
+                prevLocation.lat, prevLocation.lng, 
+                newLocation.lat, newLocation.lng
+                )
+                );
+        }
+        
+
         //get previous location
 
         // Object.keys(state.clients).map(id => {
