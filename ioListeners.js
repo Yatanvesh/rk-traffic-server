@@ -149,8 +149,8 @@ const showState = ()=>{
 
 const broadcastSimulationData = (socket)=>{
     // console.log("Broadcasting simulation to", socket.id,   state.time);
-    socket.broadcast.emit(CHANNELS.LOCATIONS, state.vehicle_data[state.time]);
-    socket.broadcast.emit(CHANNELS.SIGNALS, state.signal_data[state.time]);
+    socket.emit(CHANNELS.LOCATIONS, state.vehicle_data[state.time]);
+    socket.emit(CHANNELS.SIGNALS, state.signal_data[state.time]);
 }
 
 const pauseSimulation = ()=> {
