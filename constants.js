@@ -24,7 +24,10 @@ const INITIAL_STATE = {
     vehicle_data:[],
     signal_data:[],
     time:0,
-    clients:{}
+    clients:{},
+    interval:2000
+
+    
 }
 
 

@@ -51,6 +51,7 @@ stdin.addListener("data", function (data) {
     case '5':
         ioListeners.pauseSimulation();
         break;
+  
     default:
         console.log("\n Enter proper state:");
         break;

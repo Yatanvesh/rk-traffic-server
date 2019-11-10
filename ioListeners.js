@@ -2,20 +2,28 @@ const {CHANNELS,SIMULATION_STATES, INITIAL_STATE} = require('./constants');
 const {getDistance} = require('./API');
 const state = INITIAL_STATE;
 
-let currentSocket = null;
+// let currentSocket = null;
 
 const clientLocationBroadcaster = (socket) => { 
     socket.on(CHANNELS.CLIENT_LOCATION, (data) => {
         console.log("Received client LOCATION", data);
         let prevLocation = state.clients[data.id] && state.clients[data.id].coords;
+        let prevTime = state.clients[data.id] && state.clients[data.id].timestamp;
         handleClientData(data);
         let newLocation = data.coords;
         if(prevLocation){
-            console.log("Distance", getDistance( 
+            let distance = getDistance( 
                 prevLocation.lat, prevLocation.lng, 
                 newLocation.lat, newLocation.lng
                 )
-                );
+            let newTime = data.timestamp;
+            let timeDelta = newTime - prevTime;
+            console.log("Distance", distance);
+            let velocity = 0;
+            if(distance>=1)
+                velocity = distance/timeDelta;
+            console.log("Speed", velocity);
+           
         }
         
 
@@ -32,24 +40,7 @@ const handleClientData = data => {
 }
 
 const multiLocationBroadcaster = (socket) => {
-    let testData = {
-        "time": "3710.00",
-        "vehicles": [
-            {
-                "id": "veh241",
-                "lat": 52.52273496495127,
-                "lng": 13.405524592365191,
-                "angle": "52.32"
-            },
-            {
-                "id": "veh243",
-                "lat": 52.52473228277264,
-                "lng": 13.404934108112956,
-                "angle": "51.45"
-            }
-        ]
-    };
-    //Get data from db
+
 
     setInterval(() => {
         switch(state.state){
@@ -61,15 +52,16 @@ const multiLocationBroadcaster = (socket) => {
                 break;
             case SIMULATION_STATES.RUNNING:
                  if(state.time>state.vehicle_data.length){
-                    state.state= SIMULATION_STATES.OFF;
-                    console.log("Simulation Ended");
-                } else broadcastSimulationData(socket);
+                    state.time=0;
+                    console.log("Simulation Restarting");
+                } 
+               else broadcastSimulationData(socket);
                 
                 break;
             default:break;
         }
         
-    }, 5000);
+    }, state.interval);
     
 }
 
@@ -161,13 +153,16 @@ const setTimer = () =>{
     setInterval(()=>{
         if(state.state==SIMULATION_STATES.RUNNING)
             state.time++;
-    },5000)
+    },state.interval)
 }
 
 const setSimData = (vehicle,light)=>{
     state.signal_data=light;
     state.vehicle_data = vehicle;
 }
+
+
+
 setTimer();
 
 module.exports = {
@@ -181,5 +176,5 @@ module.exports = {
     showState,
     // fetchSimulationData,
     pauseSimulation,
-    setSimData
+    setSimData,
 }
