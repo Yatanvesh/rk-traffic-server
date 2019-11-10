@@ -8,7 +8,7 @@ let Tlng =  77.611098;
 const clientLocationBroadcaster = (socket) => { 
     socket.on(CHANNELS.CLIENT_LOCATION, (data) => {
         console.log("Received client LOCATION", data);
-        socket.emit.broadcast(CHANNELS.CLIENT_LOCATION, data);
+        socket.broadcast.emit(CHANNELS.CLIENT_LOCATION, data);
         let prevLocation = state.clients[data.id] && state.clients[data.id].coords;
         let prevTime = state.clients[data.id] && state.clients[data.id].timestamp;
         handleClientData(data);
