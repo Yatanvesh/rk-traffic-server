@@ -1,4 +1,4 @@
-const  getDistance= (lat1, lon1, lat2, lon2, unit='K') =>{
+const  getDistance= (lat1, lon1, lat2=12.974372, lon2=77.611098, unit='K') =>{
 	if ((lat1 == lat2) && (lon1 == lon2)) {
 		return 0;
 	}
